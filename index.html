@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a0c">
+  <meta name="description" content="A study-first YouTube player. Just your course playlist, one video at a time. No feed, no recommendations, no comments.">
+  <title>still. — a quieter way to study with YouTube</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">Skip to content</a>
+
+  <svg class="svg-sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l10.29-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="M6 5a1 1 0 0 1 2 0v5.1l9.4-5.7A1 1 0 0 1 19 5.25v13.5a1 1 0 0 1-1.6.85L8 13.9V19a1 1 0 0 1-2 0V5Z"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M18 5a1 1 0 0 0-2 0v5.1L6.6 4.4A1 1 0 0 0 5 5.25v13.5a1 1 0 0 0 1.6.85L16 13.9V19a1 1 0 0 0 2 0V5Z"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11.3 4.1 6.9 8H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.9l4.4 3.9A1 1 0 0 0 13 19V5a1 1 0 0 0-1.7-.9Z" fill="currentColor" stroke="none"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-volume-x" viewBox="0 0 24 24"><path d="M11.3 4.1 6.9 8H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.9l4.4 3.9A1 1 0 0 0 13 19V5a1 1 0 0 0-1.7-.9Z" fill="currentColor" stroke="none"/><path d="m16 9 5 5m0-5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-compress" viewBox="0 0 24 24"><path d="M4 9h5V4M20 9h-5V4M4 15h5v5M20 15h-5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h9m4 0h3M4 17h3m4 0h9M15 4v6M9 14v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="15" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-library" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 8h8M8 12h8M8 16h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m15.5 15.5 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m11 12 8-8m-3 3 2 2m-5 1 2 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="m4 4 16 16M9.9 5.8A9.8 9.8 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-3 3.8M6.3 7.3C3.9 9 2.5 12 2.5 12S6 18.5 12 18.5a9.6 9.6 0 0 0 4.1-.9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-focus" viewBox="0 0 24 24"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 11v5M14 11v5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-replay" viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 2.3 7.4M4 4v6h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4 2.8 20h18.4L12 4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5M12 17.2v.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-playlist" viewBox="0 0 24 24"><path d="M4 6h11M4 11h11M4 16h7M18 13v7l5-3.5L18 13Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  </svg>
+
+  <!-- Landing -->
+  <div id="landingView" class="landing-view">
+    <header class="topbar topbar--landing">
+      <a class="brand" href="#" data-home aria-label="still. home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">still<span class="brand-dot">.</span></span>
+      </a>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" id="landingLibraryBtn" type="button" hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-library"></use></svg>
+          <span>Library</span>
+        </button>
+        <button class="icon-btn" id="landingSettingsBtn" type="button" aria-label="Settings" title="Settings">
+          <svg class="icon" aria-hidden="true"><use href="#i-settings"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="landing" id="mainContent">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow hero-eyebrow"><span class="pulse-dot" aria-hidden="true"></span> A study-first YouTube player</p>
+          <h1>Just the video<br><em>you came for.</em></h1>
+          <p class="lede">No home feed. No recommendations. No comments. Paste a course playlist and get one clean lesson at a time.</p>
+
+          <div class="hero-stats" aria-label="What still. removes">
+            <div class="stat">
+              <strong>0</strong>
+              <span>recommendations</span>
+            </div>
+            <div class="stat">
+              <strong>1</strong>
+              <span>video at a time</span>
+            </div>
+            <div class="stat">
+              <strong>∞</strong>
+              <span>focus</span>
+            </div>
+          </div>
+
+          <ul class="focus-points" aria-label="Focus features">
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg> Only your playlist</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg> Progress saved locally</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg> Keyboard-first controls</li>
+          </ul>
+        </div>
+
+        <div class="start-card">
+          <div class="start-card-head">
+            <div>
+              <p class="eyebrow">Start a session</p>
+              <h2>Open your course</h2>
+            </div>
+            <span class="status-pill"><span class="pulse-dot" aria-hidden="true"></span> Quiet mode</span>
+          </div>
+
+          <form id="startForm" novalidate>
+            <label class="field-label" for="playlistInput">Course playlist or video link</label>
+            <div class="input-row input-row--main">
+              <svg class="input-icon" aria-hidden="true"><use href="#i-link"></use></svg>
+              <input id="playlistInput" name="playlist" type="text" placeholder="Paste a YouTube playlist link" autocomplete="off" spellcheck="false">
+              <button class="btn btn-primary" type="submit">
+                <span>Open</span>
+                <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+              </button>
+            </div>
+            <p class="field-hint">Public or unlisted playlists. No feed, just what you paste.</p>
+
+            <div id="keySetup" class="key-setup">
+              <div class="divider"><span>One-time setup</span></div>
+              <label class="field-label" for="apiKeyInput">YouTube Data API key</label>
+              <div class="input-row input-row--key">
+                <svg class="input-icon" aria-hidden="true"><use href="#i-key"></use></svg>
+                <input id="apiKeyInput" name="apiKey" type="password" placeholder="Paste key (AIza...)" autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off">
+                <button class="icon-btn input-action" id="showKeyBtn" type="button" aria-label="Show API key" title="Show API key">
+                  <svg class="icon" aria-hidden="true"><use href="#i-eye"></use></svg>
+                </button>
+              </div>
+              <button class="btn btn-primary btn-save-key" id="saveKeyBtn" type="button">
+                <svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg>
+                <span>Save API key</span>
+              </button>
+              <p class="field-hint">Paste the key, then click Save (or press Enter). Kept in this browser only. <a href="https://developers.google.com/youtube/v3/getting-started" target="_blank" rel="noopener noreferrer">Get a key</a></p>
+            </div>
+
+            <div id="keySaved" class="key-saved" hidden>
+              <span class="key-saved-icon"><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg></span>
+              <span>API key connected — paste a playlist above and hit Open</span>
+              <button class="link-btn" id="changeKeyBtn" type="button">Change</button>
+            </div>
+
+            <p id="startError" class="form-error" role="alert" hidden></p>
+          </form>
+
+          <p class="start-note">
+            <svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg>
+            Ad-free playback isn't guaranteed by YouTube's API. Your browser ad blocker still does that part.
+          </p>
+        </div>
+      </section>
+
+      <section id="savedSection" class="saved-section" hidden>
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Your library</p>
+            <h2>Pick up where you left off</h2>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="viewAllBtn" type="button">
+            View all
+            <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+          </button>
+        </div>
+        <div id="savedGrid" class="course-grid"></div>
+      </section>
+
+      <footer class="landing-footer">
+        <div class="footer-brand">
+          <span class="brand-mark brand-mark--small" aria-hidden="true"></span>
+          <span>still. — a quieter way to study with YouTube.</span>
+        </div>
+        <p>Not affiliated with YouTube. Playback uses the official YouTube embedded player.</p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Loading -->
+  <div id="loadingView" class="loading-view" hidden>
+    <a class="brand" href="#" data-home aria-label="still. home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">still<span class="brand-dot">.</span></span>
+    </a>
+    <div class="loading-card" role="status" aria-live="polite">
+      <span class="spinner spinner--large" aria-hidden="true"></span>
+      <p class="eyebrow">Getting your course ready</p>
+      <h1 id="loadingTitle">Loading playlist</h1>
+      <p id="loadingDetail">Talking to YouTube…</p>
+    </div>
+  </div>
+
+  <!-- Player -->
+  <div id="appView" class="app-view" hidden>
+    <header class="app-header">
+      <a class="brand brand--app" href="#" data-home aria-label="still. home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">still<span class="brand-dot">.</span></span>
+      </a>
+
+      <div class="app-title-block">
+        <span class="app-title" id="headerPlaylistTitle">Course playlist</span>
+        <span class="app-sub" id="headerPlaylistMeta"></span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" id="newPlaylistBtn" type="button">
+          <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>
+          <span class="btn-label">Playlist</span>
+        </button>
+        <button class="icon-btn" id="libraryBtn" type="button" aria-label="Library" title="Library">
+          <svg class="icon" aria-hidden="true"><use href="#i-library"></use></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" type="button" aria-label="Settings" title="Settings">
+          <svg class="icon" aria-hidden="true"><use href="#i-settings"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace" id="workspace">
+      <section class="stage" aria-label="Video player">
+        <div class="player-frame" id="playerFrame">
+          <div class="yt-holder"><div id="ytPlayer"></div></div>
+
+          <div class="player-poster" id="playerPoster">
+            <img id="posterImage" alt="" referrerpolicy="no-referrer">
+            <div class="poster-shade"></div>
+            <div class="poster-content">
+              <p class="eyebrow" id="posterLabel">Lesson 1</p>
+              <h2 id="posterTitle">Ready when you are</h2>
+              <p id="posterMeta" class="poster-meta"></p>
+              <button class="btn btn-primary btn-lg" id="posterPlay" type="button">
+                <svg class="icon" aria-hidden="true"><use href="#i-play"></use></svg>
+                <span id="posterPlayLabel">Play lesson</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="player-loading" id="playerLoading" hidden>
+            <span class="spinner" aria-hidden="true"></span>
+            <span>Loading player…</span>
+          </div>
+
+          <div class="player-error" id="playerError" hidden>
+            <span class="error-icon"><svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg></span>
+            <h2 id="playerErrorTitle">This video can't play here</h2>
+            <p id="playerErrorText">The video may be private, age-restricted, or have embedding disabled.</p>
+            <a class="btn btn-secondary btn-sm" id="playerErrorLink" href="#" target="_blank" rel="noopener noreferrer">
+              <svg class="icon" aria-hidden="true"><use href="#i-external"></use></svg>
+              Open on YouTube
+            </a>
+          </div>
+
+          <div class="player-endcard" id="endCard" hidden>
+            <span class="endcard-icon"><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg></span>
+            <p class="eyebrow" id="endcardKicker">Lesson complete</p>
+            <h2 id="endcardTitle">Nice work.</h2>
+            <p id="endcardText"></p>
+            <div class="endcard-actions">
+              <button class="btn btn-primary" id="endcardPrimary" type="button">Next lesson</button>
+              <button class="btn btn-secondary" id="endcardSecondary" type="button">Replay</button>
+            </div>
+          </div>
+
+          <div class="player-controls" id="playerControls" aria-label="Video controls">
+            <div class="seek-row">
+              <span class="time-label" id="currentTime">0:00</span>
+              <input class="seek-bar" id="seekBar" type="range" min="0" max="100" step="0.1" value="0" aria-label="Seek video">
+              <span class="time-label" id="duration">0:00</span>
+            </div>
+            <div class="controls-row">
+              <div class="controls-group">
+                <button class="control-btn" id="prevBtn" type="button" aria-label="Previous video" title="Previous video (P)">
+                  <svg class="icon" aria-hidden="true"><use href="#i-prev"></use></svg>
+                </button>
+                <button class="control-btn control-play" id="playBtn" type="button" aria-label="Play" title="Play / pause (Space)">
+                  <svg class="icon" aria-hidden="true"><use href="#i-play"></use></svg>
+                </button>
+                <button class="control-btn" id="nextBtn" type="button" aria-label="Next video" title="Next video (N)">
+                  <svg class="icon" aria-hidden="true"><use href="#i-next"></use></svg>
+                </button>
+                <div class="volume-control">
+                  <button class="control-btn" id="muteBtn" type="button" aria-label="Mute" title="Mute (M)">
+                    <svg class="icon" aria-hidden="true"><use href="#i-volume"></use></svg>
+                  </button>
+                  <input class="volume-bar" id="volumeBar" type="range" min="0" max="100" step="1" value="70" aria-label="Volume">
+                </div>
+              </div>
+              <div class="controls-group">
+                <button class="control-text-btn" id="speedBtn" type="button" aria-haspopup="menu" aria-expanded="false" title="Playback speed">1×</button>
+                <button class="control-btn" id="fullscreenBtn" type="button" aria-label="Fullscreen" title="Fullscreen (F)">
+                  <svg class="icon" aria-hidden="true"><use href="#i-expand"></use></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="speed-menu" id="speedMenu" role="menu" aria-label="Playback speed" hidden>
+              <p>Playback speed</p>
+              <button type="button" role="menuitemradio" data-speed="0.5">0.5×</button>
+              <button type="button" role="menuitemradio" data-speed="0.75">0.75×</button>
+              <button type="button" role="menuitemradio" data-speed="1">1×</button>
+              <button type="button" role="menuitemradio" data-speed="1.25">1.25×</button>
+              <button type="button" role="menuitemradio" data-speed="1.5">1.5×</button>
+              <button type="button" role="menuitemradio" data-speed="1.75">1.75×</button>
+              <button type="button" role="menuitemradio" data-speed="2">2×</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="video-info">
+          <p class="eyebrow" id="videoKicker">Lesson 1 of 1</p>
+          <h1 id="videoTitle">Select a lesson</h1>
+          <div class="video-meta-row">
+            <span id="videoChannel"></span>
+            <span class="dot-sep" aria-hidden="true"></span>
+            <span id="videoDuration"></span>
+            <span class="dot-sep" aria-hidden="true"></span>
+            <span id="videoWatchedStatus">Not started</span>
+          </div>
+          <div class="video-actions">
+            <button class="btn btn-secondary btn-sm" id="markWatchedBtn" type="button">
+              <svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg>
+              <span id="markWatchedLabel">Mark watched</span>
+            </button>
+            <button class="btn btn-ghost btn-sm" id="focusBtn" type="button">
+              <svg class="icon" aria-hidden="true"><use href="#i-focus"></use></svg>
+              <span>Focus mode</span>
+            </button>
+            <div class="keyboard-hint"><kbd>space</kbd><span>play / pause</span></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="playlist-panel" id="playlistPanel" aria-label="Course playlist">
+        <div class="panel-head">
+          <div class="panel-title-wrap">
+            <p class="eyebrow">Course playlist</p>
+            <h2 id="playlistTitle">Your playlist</h2>
+            <p class="panel-sub" id="playlistChannel"></p>
+          </div>
+          <button class="icon-btn panel-close" id="panelCloseBtn" type="button" aria-label="Hide playlist" title="Hide playlist">
+            <svg class="icon" aria-hidden="true"><use href="#i-compress"></use></svg>
+          </button>
+        </div>
+
+        <div class="playlist-progress">
+          <div class="progress-copy">
+            <span id="progressText">0 of 0 watched</span>
+            <span id="progressRemaining"></span>
+          </div>
+          <div class="progress-track" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack">
+            <span id="progressFill"></span>
+          </div>
+        </div>
+
+        <div class="playlist-search">
+          <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+          <input id="playlistSearch" type="search" placeholder="Find a lesson" autocomplete="off" aria-label="Find a lesson">
+          <button class="icon-btn search-clear" id="clearSearchBtn" type="button" aria-label="Clear search" hidden>
+            <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
+          </button>
+        </div>
+
+        <div class="playlist-scroll" id="playlistScroll">
+          <ol class="playlist-items" id="playlistItems"></ol>
+          <div class="playlist-no-results" id="playlistNoResults" hidden>
+            <p>No lessons match that search.</p>
+            <button class="link-btn" id="resetSearchBtn" type="button">Clear search</button>
+          </div>
+        </div>
+
+        <div class="panel-foot">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <span>Nothing else will be suggested.</span>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Dialogs -->
+  <dialog class="dialog" id="loadDialog">
+    <form id="loadForm" novalidate>
+      <div class="dialog-head">
+        <div>
+          <p class="eyebrow">New session</p>
+          <h2>Open a playlist</h2>
+        </div>
+        <button class="icon-btn" type="button" data-close-dialog aria-label="Close">
+          <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+      <p class="dialog-copy">Paste a public or unlisted YouTube playlist, a video link, or a playlist ID.</p>
+      <label class="field-label" for="loadInput">YouTube link or playlist ID</label>
+      <div class="input-row input-row--main">
+        <svg class="input-icon" aria-hidden="true"><use href="#i-link"></use></svg>
+        <input id="loadInput" type="text" placeholder="https://youtube.com/playlist?list=..." autocomplete="off" spellcheck="false">
+        <button class="btn btn-primary" type="submit">Open</button>
+      </div>
+      <p class="field-hint">Your current session will be replaced. Progress stays saved.</p>
+      <p class="form-error" id="loadError" role="alert" hidden></p>
+    </form>
+  </dialog>
+
+  <dialog class="dialog dialog--wide" id="libraryDialog">
+    <div class="dialog-head">
+      <div>
+        <p class="eyebrow">Saved locally</p>
+        <h2>Your library</h2>
+      </div>
+      <button class="icon-btn" type="button" data-close-dialog aria-label="Close">
+        <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
+      </button>
+    </div>
+    <div class="library-list" id="libraryList"></div>
+    <div class="dialog-empty" id="libraryEmpty" hidden>
+      <span class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#i-library"></use></svg></span>
+      <h3>No courses yet</h3>
+      <p>Open a playlist and it will show up here for next time.</p>
+      <button class="btn btn-primary btn-sm" id="libraryOpenBtn" type="button">Open a playlist</button>
+    </div>
+  </dialog>
+
+  <dialog class="dialog" id="settingsDialog">
+    <form id="settingsForm">
+      <div class="dialog-head">
+        <div>
+          <p class="eyebrow">Preferences</p>
+          <h2>Settings</h2>
+        </div>
+        <button class="icon-btn" type="button" data-close-dialog aria-label="Close">
+          <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+
+      <section class="settings-section">
+        <h3>Playback</h3>
+        <label class="toggle-row">
+          <span>
+            <strong>Autoplay next lesson</strong>
+            <small>Continue down the playlist when a video ends.</small>
+          </span>
+          <input type="checkbox" id="autoplayToggle">
+          <span class="toggle" aria-hidden="true"></span>
+        </label>
+        <label class="toggle-row">
+          <span>
+            <strong>Resume where I left off</strong>
+            <small>Pick up unfinished videos at your last position.</small>
+          </span>
+          <input type="checkbox" id="resumeToggle">
+          <span class="toggle" aria-hidden="true"></span>
+        </label>
+      </section>
+
+      <section class="settings-section">
+        <h3>YouTube API key</h3>
+        <label class="field-label" for="settingsKeyInput">Data API v3 key</label>
+        <div class="input-row">
+          <svg class="input-icon" aria-hidden="true"><use href="#i-key"></use></svg>
+          <input id="settingsKeyInput" type="password" autocomplete="off" spellcheck="false" placeholder="AIza...">
+          <button class="icon-btn input-action" id="settingsShowKeyBtn" type="button" aria-label="Show API key" title="Show API key">
+            <svg class="icon" aria-hidden="true"><use href="#i-eye"></use></svg>
+          </button>
+          <button class="btn btn-secondary" id="saveSettingsKeyBtn" type="button">Save</button>
+        </div>
+        <p class="field-hint">Stored in localStorage and sent directly to Google's API. Use a key restricted to this site and the YouTube Data API.</p>
+        <p class="form-error" id="settingsKeyError" role="alert" hidden></p>
+      </section>
+
+      <section class="settings-section">
+        <h3>Keyboard</h3>
+        <div class="shortcut-grid">
+          <span><kbd>space</kbd> Play / pause</span>
+          <span><kbd>←</kbd><kbd>→</kbd> Seek 5 seconds</span>
+          <span><kbd>↑</kbd><kbd>↓</kbd> Volume</span>
+          <span><kbd>M</kbd> Mute</span>
+          <span><kbd>N</kbd> Next lesson</span>
+          <span><kbd>P</kbd> Previous lesson</span>
+          <span><kbd>F</kbd> Fullscreen</span>
+          <span><kbd>/</kbd> Search playlist</span>
+        </div>
+      </section>
+
+      <section class="settings-section settings-danger">
+        <h3>Local data</h3>
+        <div class="settings-actions">
+          <button class="btn btn-secondary btn-sm" id="clearProgressBtn" type="button">Clear watch progress</button>
+          <button class="btn btn-danger btn-sm" id="removeKeyBtn" type="button">Remove API key</button>
+        </div>
+        <p class="field-hint">Watch progress, your library, and your key never leave this browser (except the key being sent to Google for API calls).</p>
+      </section>
+
+      <p class="settings-note">still. uses the official YouTube embedded player. It does not block ads; YouTube's API doesn't allow that. Your ad blocker still does the heavy lifting.</p>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

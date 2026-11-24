@@ -1,0 +1,11 @@
+{
+  "name": "still-youtube-study-player",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A study-first YouTube wrapper: just your course playlist, one video at a time.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  }
+}
